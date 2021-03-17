@@ -29,7 +29,7 @@ def printBoard(board):
 			)
 
 
-def checkWin(pl): # checks if current player has won
+def checkWin(pl, total = 0): # checks if current player has won
 	if len(pl) < 3: return 0 # if player has less moves than 3, dont bother checking
 	pl = ''.join(pl)
 	for i in 'abc123': # for vertical and horizontal
@@ -40,6 +40,7 @@ def checkWin(pl): # checks if current player has won
 			return 'win'
 		elif 'c1' in pl and 'a3' in pl:
 			return 'win'
+	if total == 9: return 'draw'
 
 def isValid(board, play, pl1, pl2): # check if play valid or not
 	if play in board: # check if play is valid coord
@@ -74,12 +75,12 @@ def startGame():
 		#check if win
 		if i%2 == 0: # player 1
 			pl1.append(play)
-			result = checkWin(pl1)
+			result = checkWin(pl1, (len(pl1)+len(pl2)))
 		else: # player 2
 			pl2.append(play)
-			result = checkWin(pl2)
+			result = checkWin(pl2, (len(pl1)+len(pl2)))
 			
-		if result:
+		if result == 'win':
 			print(f'PLAYER {turn[0]} ({turn[1]}) HAS WON!!')
 			break
 	
