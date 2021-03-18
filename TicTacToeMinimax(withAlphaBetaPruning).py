@@ -1,8 +1,6 @@
 '''
 TODO
-giveLegalMoves() function : gives list of unoccupied coords
-
-
+-
 '''
 
 if __name__ == '__main__':
@@ -56,29 +54,33 @@ def isValid(board, play, pl1, pl2): # check if play valid or not
 	return 'no'
 
 
+def giveLegal(board, pl1, pl2): # gives a list of legal moves
+	pl = pl1 + pl2
+	return [ square for square in board if square not in pl]
+
+
 def minimax(board, turn, score, pl1, pl2):
     if turn == '1' : pl, turn, score = pl1, '2', -1 #setting up pl and score for the min/max player
     elif turn == '2' : pl, turn, score = pl2, '1', 1 #FLIPPING TURN for next player
     best = ''
-    for square in board:
-        if isValid(board, square, pl1, pl2) == 'valid':
-            pl.append(square)
-            win = checkWin(pl, (len(pl1)+len(pl2)))
-            if win == 'draw':
-                score = 0
-                best = square
-            elif win == 'win':
-                if turn == '2': score = 1
-                elif turn == '1': score = -1 # TURN IS FLIPPED HERE
-                best = square
-                pl.pop()
-                return score, best
-            else:
-                newscore, _ = minimax(board, turn, score, pl1, pl2)
-                if (newscore > score and turn == '2') or (newscore < score and turn == '1'):
-                    score = newscore # TURN IS FLIPPED IN ABOVE LINE
-                    best = square
+    for square in giveLegal(board, pl1, pl2):
+        pl.append(square)
+        win = checkWin(pl, (len(pl1)+len(pl2)))
+        if win == 'draw':
+            score = 0
+            best = square
+        elif win == 'win':
+            if turn == '2': score = 1
+            elif turn == '1': score = -1 # TURN IS FLIPPED HERE
+            best = square
             pl.pop()
+            return score, best
+        else:
+            newscore, _ = minimax(board, turn, score, pl1, pl2)
+            if (newscore > score and turn == '2') or (newscore < score and turn == '1'):
+                score = newscore # TURN IS FLIPPED IN ABOVE LINE
+                best = square
+        pl.pop()
     return score, best
 
 
